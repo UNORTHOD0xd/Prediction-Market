@@ -1,0 +1,24 @@
+# Environment and secrets
+.env
+*.env
+secrets.yaml
+
+# Foundry/Forge
+contracts/cache/
+contracts/out/
+!/contracts/broadcast
+contracts/broadcast/*/31337/
+contracts/broadcast/**/dry-run/
+
+# Docs
+docs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

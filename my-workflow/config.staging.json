@@ -1,0 +1,10 @@
+{
+  "geminiModel": "gemini-2.0-flash",
+  "evms": [
+    {
+      "marketAddress": "0x574aA1A5b99caE835a528f092F19c83583fEf13a ",
+      "chainSelectorName": "ethereum-testnet-sepolia",
+      "gasLimit": "500000"
+    }
+  ]
+}
