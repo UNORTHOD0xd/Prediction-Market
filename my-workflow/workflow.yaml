@@ -1,34 +1,91 @@
-# ==========================================================================
-# CRE WORKFLOW SETTINGS FILE
-# ==========================================================================
-# Workflow-specific settings for CRE CLI targets.
-# Each target defines user-workflow and workflow-artifacts groups.
-# Settings here override CRE Project Settings File values.
+# =============================================================================
+# CRE WORKFLOW SETTINGS FILE (workflow.yaml)
+# =============================================================================
 #
-# Example custom target:
-# my-target:
-#   user-workflow:
-#     workflow-name: "MyExampleWorkflow"    # Required: Workflow Registry name
-#   workflow-artifacts:
-#     workflow-path: "./main.ts"            # Path to workflow entry point
-#     config-path: "./config.yaml"          # Path to config file
-#     secrets-path: "../secrets.yaml"       # Path to secrets file (project root by default)
+# PURPOSE:
+# --------
+# This file defines deployment targets for your CRE workflow. Each target
+# specifies which configuration files to use when building, simulating,
+# or deploying the workflow.
+#
+# HOW CRE USES THIS FILE:
+# -----------------------
+# When you run CRE CLI commands, you specify a target:
+#
+#   cre workflow simulate my-workflow --broadcast -t staging-settings
+#   cre workflow deploy my-workflow -t production-settings
+#
+# The CLI reads this file to determine:
+#   1. The workflow name (for the Workflow Registry)
+#   2. Which TypeScript file is the entry point
+#   3. Which config file to inject into runtime.config
+#   4. Which secrets file to use (if any)
+#
+# TARGETS EXPLAINED:
+# ------------------
+# A target groups related settings for a specific environment:
+#
+#   <target-name>:
+#     user-workflow:
+#       workflow-name: "unique-name"     # Registered in Chainlink's Workflow Registry
+#     workflow-artifacts:
+#       workflow-path: "./main.ts"       # Entry point (exports main())
+#       config-path: "./config.json"     # Configuration file (injected as runtime.config)
+#       secrets-path: "./secrets.yaml"   # Secrets file (encrypted, optional)
+#
+# WORKFLOW REGISTRY:
+# ------------------
+# The workflow-name is registered in Chainlink's Workflow Registry when deployed.
+# This allows the Chainlink network to:
+#   - Route triggers to your workflow
+#   - Manage versioning and updates
+#   - Track workflow execution metrics
+#
+# BEST PRACTICES:
+# ---------------
+#   - Use descriptive target names (staging-settings, production-settings)
+#   - Keep staging and production configs separate
+#   - Never commit secrets to version control
+#   - Use unique workflow names per environment
+#
+# =============================================================================
 
-# ==========================================================================
+# =============================================================================
+# STAGING TARGET
+# =============================================================================
+# Use this target for development and testing:
+#   cre workflow simulate my-workflow --broadcast -t staging-settings
+#
+# The staging config typically uses:
+#   - Testnet chains (Sepolia, Mumbai, etc.)
+#   - Test contract addresses
+#   - Lower gas limits for cheaper testing
+# =============================================================================
 staging-settings:
   user-workflow:
-    workflow-name: "my-workflow-staging"
+    workflow-name: "my-workflow-staging"    # Unique name in Workflow Registry
   workflow-artifacts:
-    workflow-path: "./main.ts"
-    config-path: "./config.staging.json"
-    secrets-path: ""
-    
+    workflow-path: "./main.ts"              # Entry point file
+    config-path: "./config.staging.json"    # Staging configuration
+    secrets-path: ""                        # No secrets for this example
 
-# ==========================================================================
+
+# =============================================================================
+# PRODUCTION TARGET
+# =============================================================================
+# Use this target for mainnet deployment:
+#   cre workflow deploy my-workflow -t production-settings
+#
+# The production config should use:
+#   - Mainnet chains
+#   - Audited contract addresses
+#   - Appropriate gas limits
+#   - Production API keys in secrets
+# =============================================================================
 production-settings:
   user-workflow:
-    workflow-name: "my-workflow-production"
+    workflow-name: "my-workflow-production"  # Unique name in Workflow Registry
   workflow-artifacts:
-    workflow-path: "./main.ts"
-    config-path: "./config.production.json"
-    secrets-path: ""
+    workflow-path: "./main.ts"               # Same entry point
+    config-path: "./config.production.json"  # Production configuration
+    secrets-path: ""                         # Add secrets path for production
